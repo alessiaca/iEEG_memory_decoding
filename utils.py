@@ -12,7 +12,8 @@ def compute_bipolar_epochs(epochs, channel_pairs):
         # Compute bipolar signal
         bipolar_signal = epochs.get_data(picks=ch1) - epochs.get_data(picks=ch2)
         # Define new channel name
-        new_channel = f"{ch1}-{ch2}"
+        #new_channel = f"{ch1}-{ch2}"
+        new_channel = ch1
         # Append new data
         bipolar_data.append(bipolar_signal)
         bipolar_ch_names.append(new_channel)
