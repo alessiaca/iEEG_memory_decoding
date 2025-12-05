@@ -1,10 +1,11 @@
 %% Visualize location of electrodes
+clear all;
 close all;
 
 figure = ea_mnifigure;
 % Loop over patient 
 for sub=1:9
-    path = sprintf('../data_epochs/metadata/Subject_0%s_electrode_locations.csv', string(sub));
+    path = sprintf('../data_epochs/metadata/Subject_0%s_electrode_locations_bipolar.csv', string(sub));
     coords = readtable(path); 
     %figure = ea_mnifigure;
 
@@ -27,10 +28,10 @@ for sub=1:9
     for el=1:length(indices)
         mni = table2array(coords(indices(el), :));
         color = "#808080";
-        alpha = 0.2;
-        if perf(el, 3).p < 0.01
+        alpha = 0.1;
+        if perf(el, 3).p < 0.05
             color = "#FF1493";
-            alpha = 0.5; 
+            alpha = 1; 
         end
         wjn_plot_mni_roi(mni,1, colors(el, :), alpha);
     end
