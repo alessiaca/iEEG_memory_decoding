@@ -38,6 +38,33 @@ def compute_bipolar_epochs(epochs, channel_pairs):
     return bipolar_epochs
 
 
+def compute_car_epochs_all(epochs):
+
+    # Compute common average reference
+    car_data = epochs.get_data() - np.mean(epochs.get_data(), axis=1, keepdims=True)
+
+    # Store CAR-referenced data and names
+    car_ch_names = [name + '_CAR' for name in epochs.info['ch_names']]
+
+    # Create new info structure for CAR-referenced channels
+    new_info = mne.create_info(
+        ch_names=car_ch_names,
+        sfreq=epochs.info['sfreq'],
+        ch_types='eeg'
+    )
+
+    # Create new Epochs object with only CAR-referenced data
+    car_epochs = mne.EpochsArray(
+        data=car_data,
+        info=new_info,
+        events=epochs.events,
+        event_id=epochs.event_id,
+        tmin=epochs.tmin
+    )
+
+    return car_epochs
+
+
 def compute_car_epochs(epochs, groups):
 
     car_data = []
@@ -77,11 +104,12 @@ def compute_car_epochs(epochs, groups):
     return car_epochs
 
 def compute_p_tfr(tfr, idx_1, idx_2):
-    _, _, n_freqs, n_times = tfr.shape
+    tfr = tfr.squeeze()
+    _, n_freqs, n_times = tfr.shape
     p_values = np.zeros((n_freqs, n_times))
     for f in range(n_freqs):
         for t in range(n_times):
-            p_values[f, t] = mannwhitneyu(tfr[idx_1, :, f, t].squeeze(), tfr[idx_2, :, f, t].squeeze())[1]
+            p_values[f, t] = mannwhitneyu(tfr[idx_1, f, t].squeeze(), tfr[idx_2, f, t])[1]
 
     return p_values
 

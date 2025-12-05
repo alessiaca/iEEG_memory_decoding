@@ -46,7 +46,7 @@ for subject in subjects:
         for i, size in enumerate(sizes):
 
             idx = np.where(set_size == size)[0]
-            tfr_size = tfr[idx].average().apply_baseline(mode="zscore", baseline=(None, None))
+            tfr_size = tfr[idx].average().apply_baseline(mode="zscore", baseline=(3, 6))
             tfr_size.plot(vmin=-4, vmax=4, tmin=0.5, tmax=7.5, axes=axes[i], show=False)
 
             axes[i].set_title(f"Set size: {size}")

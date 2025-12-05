@@ -9,7 +9,7 @@ import mne
 normalize = True
 norm_method = "percent"
 referencing = "bip"
-n_split = 1  # How many features over time per epoch
+n_split = 2  # How many features over time per epoch
 
 subjects = np.arange(1, 10)
 
@@ -40,7 +40,8 @@ for subject in subjects:
     settings.features.welch = False
     settings.features.return_raw = False
     settings.features.raw_hjorth = False
-    settings.segment_length_features_ms = int(3000 / n_split)
+    settings.segment_length_features_ms = 1000 #int(3000 / n_split)
+    settings.sampling_rate_features_hz = 5
     settings.postprocessing.feature_normalization = False
 
     # Compute features

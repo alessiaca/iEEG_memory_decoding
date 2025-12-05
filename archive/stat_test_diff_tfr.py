@@ -44,11 +44,11 @@ for subject in subjects:
 
         # Compute the TFR
         tfr = epochs.compute_tfr(picks=ch, average=False, freqs=freqs, method="morlet", n_cycles=7)
-        tfr_norm = tfr.copy().apply_baseline(mode="percent", baseline=(0, 1))
+        tfr_norm = tfr.copy().apply_baseline(mode="percent", baseline=(3, 6))
 
         # Plot the difference
         fig, axes = plt.subplots(1, 2, figsize=(15, 10))
-        tfr_diff = tfr_norm[idx_4].average()# - tfr_norm[idx_8].average()
+        tfr_diff = tfr_norm[idx_4].average() - tfr_norm[idx_8].average()
         tfr_diff.plot(tmin=1, tmax=6, axes=axes[0], show=False)
         axes[0].set_title("Difference_4-8")
 
@@ -56,7 +56,7 @@ for subject in subjects:
         tfr_array = tfr.get_data(tmin=1, tmax=6)
 
         # Average over time to reduce dimensionality
-        window_size = int(tfr.info["sfreq"] * 0.05)
+        window_size = int(tfr.info["sfreq"] * 0.1)
         tfr_array_small = np.apply_along_axis(lambda x: window_average(x, window_size), axis=-1, arr=tfr_array)
 
         p_values = compute_p_tfr(tfr_array_small, idx_4, idx_8)
@@ -86,6 +86,6 @@ for subject in subjects:
         # Save the figure
         fig.savefig(f"..\\figures\\tfr_subject_0{subject}_{ch}_stats_4_8_{reference_scheme}.png")
 
-        #plt.close()
+        plt.close()
 
-        plt.show()
+        #plt.show()
